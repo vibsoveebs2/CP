@@ -3,42 +3,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 void *fun_empress(void *arg) {
   //blah
-  printf("Empress creation successful!");
+  printf("Empress creation successful!\n");
   return NULL;
 }
 
 void *fun_merchant(void *arg) {
   //blah
-  printf("Merchant creation successful!");
+  printf("Merchant creation successful!\n");
   return NULL;
 }
 
 int main(int argc, char *argv[]) {
-  // input file read here
-  // set date to -1, when empress arrives set day.
-  // for each merchant, check date. if negative empress not there
-  // when empress arrives set the date
   int e_arrive, m1_arrive, m2_arrive, m3_arrive;
 
   FILE *fin;
-  //fin = fopen(argv[1], "r");
-  fin = fopen("input/input1", "r");
+  fin = fopen(argv[1], "r");
   if(fin == NULL) {
-    printf("Error opening file, check file and try again");
+    printf("Error opening file, check file and try again\n");
     return (-1);
   } else {
     // get, separate, and store values
-    if(fscanf(fin, "%d, %d, %d, %d", &e_arrive, &m1_arrive, &m2_arrive, &m3_arrive)) {
+    if(fscanf(fin, "%d, %d, %d, %d", &e_arrive, &m1_arrive, &m2_arrive, &m3_arrive) == 0) {
 	// error
-	printf("Error in input file, example input: 1, 2, 3, 4");
+	printf("Error in input file, example input: 1, 2, 3, 4\n");
 	return (-1);
     }
-    printf("Empress: %d", e_arrive);
-    printf("M1: %d", m1_arrive);
-    printf("M2: %d", m2_arrive);
-    printf("M3: %d", m3_arrive);
+    printf("Empress: %d\n", e_arrive);
+    printf("M1: %d\n", m1_arrive);
+    printf("M2: %d\n", m2_arrive);
+    printf("M3: %d\n", m3_arrive);
   }  
   fclose(fin);
 
