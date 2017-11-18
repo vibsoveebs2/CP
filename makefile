@@ -1,7 +1,7 @@
-CC=gcc -g -std=c99 -Wall -Wextra -Wno-unused-parameter
+
 
 default:
-	$(CC) -c prog4.c -lpthtread 
+	gcc -o prog4 prog4.c -std=c99 -lpthread
 clean:
 	rm -rf *.o
 	rm -rf .so 
