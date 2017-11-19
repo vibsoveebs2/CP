@@ -51,7 +51,7 @@ void *fun_empress(void *arg) {
 				/* check for arrivals */
 				if(calicut_transactions == 3) printf("We met everyone by day %d\n", day);
 				else if(calicut_transactions > 0) printf("We bought some goods!\n");
-				else printf("Alas, we were too late.. We missed %d transactions!\n", calicut_transactions + 4);
+				else printf("Alas, we were too late.. We missed some transactions!\n");
 
 				/* Cases: All transactions complete - Missed a transaction */
 				if(calicut_transactions == 3 || calicut_transactions < 0) day = 11;			 		
