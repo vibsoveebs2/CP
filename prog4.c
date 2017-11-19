@@ -123,7 +123,7 @@ int getInput(char *argv[]) {
 	fin = fopen(argv[1], "r");			// open the filename passed on the command line
 	//fin = fopen("input1", "r");			// enable for debugging - hard code 
 	if(fin == NULL) {				// check for illegal file
-		printf("Error opening file:\n\tCheck file and try again\n");
+		printf("Error opening file:\n\tCheck file path and try again\n");
 		return (-1);				// return error
 	} else { 	/* get, separate, and store the values - Scanf returns the number of characters written */
 		if(fscanf(fin, "%d, %d, %d, %d", &(arrive[0]), &(arrive[1]), &(arrive[2]), &(arrive[3])) != 4) {
