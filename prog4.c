@@ -118,10 +118,10 @@ void *fun_merchant(void *arg) {
 	return NULL;					// we're done
 }
 
-int getInput(const char *filename) {
+int getInput(char *argv[]) {
 	FILE *fin;					// file handler
-	//fin = fopen(filename[1], "r");			// open the file
-	fin = fopen("input1", "r");			// enable for debugging - hard code 
+	fin = fopen(argv[1], "r");			// open the filename passed on the command line
+	//fin = fopen("input1", "r");			// enable for debugging - hard code 
 	if(fin == NULL) {				// check for illegal file
 		printf("Error opening file:\n\tCheck file and try again\n");
 		return (-1);				// return error
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
 	/* Day counter initialization */	
 	day = 1;
 
-	int rc = getInput(argv[1]);		// open the file, separate the variables, and close the file
+	int rc = getInput(argv);	// open the file, separate the variables, and close the file
 	if(rc != 0) return rc;		// problems? return the error	  
 
 	pthread_t empress, merchant1, merchant2, merchant3;
