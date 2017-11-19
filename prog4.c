@@ -25,7 +25,7 @@ void *fun_empress(void *arg) {
 	int tid = atoi((char*) arg);	
 	int arrival = arrive[tid];
 	
-	/* Semaphore pointers! (or Macros) For readability of course. 		*/
+	/* Semaphore pointers! (or Macros) For readability of course 		*/
 	sem_t* my_cv = &(rendezvous_cv[0]);
 	sem_t* merch1_cv = &(rendezvous_cv[1]);
 	sem_t* merch2_cv = &(rendezvous_cv[2]);
@@ -43,19 +43,23 @@ void *fun_empress(void *arg) {
 		ready = 0;			// reset thread ready variable - day is changing, threads won't be ready
 
 		if(day >= arrive[tid]) {
+			/* Arrival message */
 			if(day == arrive[tid]) printf("Empress arrived on day %d\n", arrive[tid]);
-			/* if empress is here, check arrivals */
-			if(calicut_transactions == 3 || calicut_transactions < 0) {
-				/* wrap it up */
+			
+			/* empress is here, check arrivals */
+			if(calicut_transactions > 0 || calicut_transactions < 0) {
+				/* check for arrivals */
 				if(calicut_transactions == 3) printf("We met everyone by day %d\n", day);
-				else printf("Alas, we were too late..\n");
-				day = 11; 	// make sure we tell everyone our work is done	
+				else if(calicut_transactions > 0) printf("We bought some goods!\n");
+				else printf("Alas, we were too late.. We missed %d transactions!\n", calicut_transactions + 4);
+
+				/* Cases: All transactions complete - Missed a transaction */
+				if(calicut_transactions == 3 || calicut_transactions < 0) day = 11;			 		
 			}
-		/* empress not here, any arrivals are missed */
-		} else if(calicut_transactions > 0) {
-			printf("Empress has not arrived, any goods were sold at market!\n");
-			calicut_transactions = -128;
-		}
+		/* for simplicity, empress arrives at end of day and checks merchants status */
+		} else if(day+1 == arrive[tid]) if(calicut_transactions != 0) calicut_transactions = calicut_transactions - 4;		
+		// else - empress has not arrived! we don't know what's happening in calicut..
+
 		day = day + 1;
 
 		/* release the lock, tell all the merchants to get back to work - RESUME FROM CP */
@@ -69,9 +73,9 @@ void *fun_empress(void *arg) {
 	}
 
 	/* Time to leave, did we miss anyone? */
-	if(calicut_transactions == 3) printf("Good Job! We met everyone by the end of our journey, time to go to Canton!\n");
+	if(calicut_transactions == 3) printf("Good Job! We met everyone, time to go to Canton!\n");
 	/* oh no! */
-	else printf("Time to turn back to the US...\n");
+	else printf("Time to turn back to the US..\n");
 	return NULL;					// we're done
 }
 
@@ -88,7 +92,7 @@ void *fun_merchant(void *arg) {
 		sem_post(&rendezvous_lock);
 	}
 
-	/* Semaphore pointers! (or Macros) For readability of course. 		*/
+	/* Semaphore pointers! (or Macros) For readability of course 		*/
 	sem_t* empress_cv = &(rendezvous_cv[0]);
 	sem_t* my_cv = &(rendezvous_cv[tid]);
 	/* Relevant information */
@@ -158,12 +162,12 @@ int main(int argc, char *argv[]) {
 	rc = pthread_create(&merchant3, NULL, fun_merchant, (void*) "3"); assert(rc == 0);
 
 	// join waits for the threads to finish
-	rc = pthread_join(merchant3, NULL); assert(rc == 0);
-	printf("Merchant 3 rejoined!\t");
+	rc = pthread_join(merchant1, NULL); assert(rc == 0); 
+	printf("Merchant 1 rejoined!\t");
 	rc = pthread_join(merchant2, NULL); assert(rc == 0);
 	printf("Merchant 2 rejoined!\t");
-	rc = pthread_join(merchant1, NULL); assert(rc == 0); 
-	printf("Merchant 1 rejoined!\t\n");
+	rc = pthread_join(merchant3, NULL); assert(rc == 0);
+	printf("Merchant 3 rejoined!\t\n");
 	rc = pthread_join(empress, NULL); assert(rc == 0);
 	printf("Empress rejoined!\n");
 	printf("main: exiting\n");
