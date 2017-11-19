@@ -1,4 +1,6 @@
+
+
 default:
-	gcc -o prog4 prog4.c -std=c99 -lpthread
+	gcc -g -o prog4 prog4.c -std=c99 -lpthread
 clean:
-	rm -rf prog4 
+	rm -rf prog4
