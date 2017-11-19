@@ -114,9 +114,9 @@ void *fun_merchant(void *arg) {
 	return NULL;					// we're done
 }
 
-int getInput(char *filename) {
+int getInput(const char *filename) {
 	FILE *fin;					// file handler
-	//fin = fopen(argv[1], "r");			// open the file
+	//fin = fopen(filename[1], "r");			// open the file
 	fin = fopen("input1", "r");			// enable for debugging - hard code 
 	if(fin == NULL) {				// check for illegal file
 		printf("Error opening file:\n\tCheck file and try again\n");
