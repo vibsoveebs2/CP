@@ -12,9 +12,10 @@ echo "NOTE: The input folder path is ./inputs/"
 path="./inputs/"
 
 echo "NOTE: the files must be in this format: input#"
-echo "Enter the number of files: "
+echo "Enter the last file number: "
 read number
 
+# Change the following variable to select the first test file
 x=1
 while [ $x -le $number ]
 do
