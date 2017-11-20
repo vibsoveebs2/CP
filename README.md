@@ -12,7 +12,7 @@ PA4: Multithreaded Programs using pthreads   11/19/2017
 (2) There is also a shell script in our folder called testAllInputs.sh which checks all the 20 input files at one instance. There will be a prompt on the terminal which will ask you to "Enter the last file number:" Please select 20 as there are 20 input files provided. On hitting enter, we will get the desired output for each of them as you can see in the report provided.
 ------------------------------------------------------------------------------------------------------------------------------------------
 
-(3) To run the program, we need to make sure that the input files and prog4.c and the testAllInputs.sh are in the same directory. We can run every input file separately using the command ./prog4 ./inputs/input1 or you can directly use the shell script ./testAllInputs.sh and the script will allow you to test multiple input files at once.
+(3) To run the program, we need to make sure that the input files and prog4.c and the testAllInputs.sh are in the same directory. You can run every input file separately using the command ./prog4 ./inputs/input1 or you can directly use the shell script ./testAllInputs.sh and the script will allow you to test multiple input files at once.
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 AUTHORS
