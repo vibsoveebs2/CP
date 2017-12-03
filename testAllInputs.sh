@@ -1,3 +1,4 @@
+#!/bin/bash
 ######################################################################
 ## 	Author: 	Jonathon R Dahl 			    ##
 ## 	Purpose: 	Allow for batch input tests		    ##
