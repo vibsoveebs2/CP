@@ -871,28 +871,34 @@ https://leetcode.com/problems/design-log-storage-system/solutions/3416482/soluti
 ```
 class LogSystem {
 private:
-    unordered_map<string, int> logs;
+    unordered_map<string, int> logs; // Stores timestamps and corresponding IDs
+
 public:
     LogSystem() {
+        // Constructor: Initialize the logs map
     }
+
     void put(int id, string timestamp) {
-        logs[timestamp] = id;
+        logs[timestamp] = id; // Add the timestamp and ID to the logs map
     }
+
     vector<int> retrieve(string start, string end, string granularity) {
-        int index = getIndex(granularity);
-        string startStr = start.substr(0, index);
-        string endStr = end.substr(0, index);
+        int index = getIndex(granularity); // Get the index based on granularity
+        string startStr = start.substr(0, index); // Extract the relevant part of the start timestamp
+        string endStr = end.substr(0, index); // Extract the relevant part of the end timestamp
 
-        vector<int> result;
-        for(auto it = logs.begin(); it!=logs.end();it++) {
-            string str = it->first.substr(0, index);
+        vector<int> result; // Initialize the result vector
+        for (auto it = logs.begin(); it != logs.end(); it++) {
+            string str = it->first.substr(0, index); // Extract the relevant part of the current timestamp
 
-            if (startStr <= str && endStr>=str) {
+            if (startStr <= str && endStr >= str) {
+                // If the current timestamp falls within the specified range, add the corresponding ID to the result
                 result.push_back(it->second);
             }
         }
-        return result;
+        return result; // Return the retrieved IDs
     }
+
     int getIndex(string granularity) {
         int index = 0;
         if (granularity == "Year") index = 4; 
@@ -902,9 +908,11 @@ public:
         else if (granularity == "Minute") index = 16;
         else index = 19;
 
-        return index;
+        return index; // Return the appropriate index based on granularity
     }
 };
+// time: put & getIndex -> O(1) retrive -> o(n)
+//space: o(n)
 ```
 
 void push(int x)
