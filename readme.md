@@ -371,63 +371,74 @@ https://leetcode.com/problems/number-of-islands-ii/solutions/3315075/solution/
 ```
 class Solution {
 public:
-    int find(vector<int>& memo, int x){
+    // Helper function to find the representative of a set
+    int find(vector<int>& memo, int x) {
         int rep = memo[x];
-        if(rep == memo[rep]) return rep;
-        while(rep != memo[rep]){
+        if (rep == memo[rep]) return rep;
+        while (rep != memo[rep]) {
             rep = memo[rep];
         }
         int tmp;
-        while(memo[x] != rep){
+        while (memo[x] != rep) {
             tmp = x;
             x = memo[x];
             memo[tmp] = rep;
         }
         return rep;
     }
-    int combine(vector<int>& memo, vector<int>& rank, int a, int b){
-        if(find(memo, a) == find(memo, b)) return 0;
-        if(rank[memo[a]] < rank[memo[b]]){
+
+    // Helper function to combine two sets
+    int combine(vector<int>& memo, vector<int>& rank, int a, int b) {
+        if (find(memo, a) == find(memo, b)) return 0;
+        if (rank[memo[a]] < rank[memo[b]]) {
             rank[memo[b]] += rank[memo[a]];
             memo[memo[a]] = memo[b];
-        }
-        else{
+        } else {
             rank[memo[a]] += rank[memo[b]];
             memo[memo[b]] = memo[a];
         }
         return -1;
     }
+
     vector<int> numIslands2(int m, int n, vector<vector<int>>& positions) {
-        vector<int> memo(m * n, -1);
-        vector<int> rank(m * n, 0);
-        vector<int> result(positions.size(), 0);
-        result[0] = 1;
+        vector<int> memo(m * n, -1); // Initialize disjoint-set data structure
+        vector<int> rank(m * n, 0); // Initialize rank for union-by-rank optimization
+        vector<int> result(positions.size(), 0); // Initialize result vector
+
+        result[0] = 1; // First position always forms a new island
         int cell = positions[0][0] * n + positions[0][1];
-        memo[cell] = cell;
-        rank[cell] = 1;
-        for(int i = 1; i < positions.size(); i++){
+        memo[cell] = cell; // Mark the cell as part of an island
+        rank[cell] = 1; // Set rank to 1
+
+        for (int i = 1; i < positions.size(); i++) {
             cell = positions[i][0] * n + positions[i][1];
-            if(memo[cell] != -1){
+            if (memo[cell] != -1) {
+                // If the cell is already part of an island, skip
                 result[i] = result[i - 1];
                 continue;
             }
-            int count = 1;
-            memo[cell] = cell;
-            rank[cell] = 1;
-            if(cell >= n && memo[cell - n] != -1){
+
+            int count = 1; // Initialize count for this position
+            memo[cell] = cell; // Mark the cell as part of an island
+            rank[cell] = 1; // Set rank to 1
+
+            // Check adjacent cells and combine islands if needed
+            if (cell >= n && memo[cell - n] != -1) {
                 count += combine(memo, rank, cell, cell - n);
             }
-            if(cell < (m - 1) * n && memo[cell + n] != -1){
+            if (cell < (m - 1) * n && memo[cell + n] != -1) {
                 count += combine(memo, rank, cell, cell + n);
             }
-            if(cell % n > 0 && memo[cell - 1] != -1){
+            if (cell % n > 0 && memo[cell - 1] != -1) {
                 count += combine(memo, rank, cell, cell - 1);
             }
-            if(cell % n < n - 1 && memo[cell + 1] != -1){
+            if (cell % n < n - 1 && memo[cell + 1] != -1) {
                 count += combine(memo, rank, cell, cell + 1);
             }
-            result[i] = result[i - 1] + count;
+
+            result[i] = result[i - 1] + count; // Update result
         }
+
         return result;
     }
 };
