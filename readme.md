@@ -291,3 +291,91 @@ public:
 
 };
 ```
+
+You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water and 1's represent land. Initially, all the
+cells of grid are water cells (i.e., all the cells are 0's).
+
+We may perform an add land operation which turns the water at position into a land. You are given an array positions
+the position
+
+Return an array of integers answer where answer[i]
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all
+surrounded by water.
+
+where positions [i] = [ri, Ci])
+
+is
+
+operation.
+
+(ri, Ci) at which we should operate the ith
+
+is the number of islands after turning the cell (ri, Ci) into a land.
+
+https://leetcode.com/problems/number-of-islands-ii/solutions/3315075/solution/
+
+```
+class Solution {
+public:
+    int find(vector<int>& memo, int x){
+        int rep = memo[x];
+        if(rep == memo[rep]) return rep;
+        while(rep != memo[rep]){
+            rep = memo[rep];
+        }
+        int tmp;
+        while(memo[x] != rep){
+            tmp = x;
+            x = memo[x];
+            memo[tmp] = rep;
+        }
+        return rep;
+    }
+    int combine(vector<int>& memo, vector<int>& rank, int a, int b){
+        if(find(memo, a) == find(memo, b)) return 0;
+        if(rank[memo[a]] < rank[memo[b]]){
+            rank[memo[b]] += rank[memo[a]];
+            memo[memo[a]] = memo[b];
+        }
+        else{
+            rank[memo[a]] += rank[memo[b]];
+            memo[memo[b]] = memo[a];
+        }
+        return -1;
+    }
+    vector<int> numIslands2(int m, int n, vector<vector<int>>& positions) {
+        vector<int> memo(m * n, -1);
+        vector<int> rank(m * n, 0);
+        vector<int> result(positions.size(), 0);
+        result[0] = 1;
+        int cell = positions[0][0] * n + positions[0][1];
+        memo[cell] = cell;
+        rank[cell] = 1;
+        for(int i = 1; i < positions.size(); i++){
+            cell = positions[i][0] * n + positions[i][1];
+            if(memo[cell] != -1){
+                result[i] = result[i - 1];
+                continue;
+            }
+            int count = 1;
+            memo[cell] = cell;
+            rank[cell] = 1;
+            if(cell >= n && memo[cell - n] != -1){
+                count += combine(memo, rank, cell, cell - n);
+            }
+            if(cell < (m - 1) * n && memo[cell + n] != -1){
+                count += combine(memo, rank, cell, cell + n);
+            }
+            if(cell % n > 0 && memo[cell - 1] != -1){
+                count += combine(memo, rank, cell, cell - 1);
+            }
+            if(cell % n < n - 1 && memo[cell + 1] != -1){
+                count += combine(memo, rank, cell, cell + 1);
+            }
+            result[i] = result[i - 1] + count;
+        }
+        return result;
+    }
+};
+```
