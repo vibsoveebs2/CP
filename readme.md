@@ -964,34 +964,49 @@ stk.top();
 https://leetcode.com/problems/max-stack/editorial/
 
 ```
+#include <set>
+
 class MaxStack {
 private:
-    set<pair<int, int>> stack;
-    set<pair<int, int>> values;
-    int cnt;
+    // Using two sets to maintain the stack and values.
+    // The first element of each pair is the count (to handle duplicates).
+    std::set<std::pair<int, int>> stack; // {count, value}
+    std::set<std::pair<int, int>> values; // {value, count}
+    int cnt; // Counter for unique elements
 
 public:
-    MaxStack() { cnt = 0; }
+    MaxStack() {
+        cnt = 0;
+    }
 
+    // Push a value onto the stack.
     void push(int x) {
         stack.insert({cnt, x});
         values.insert({x, cnt});
         cnt++;
     }
 
+    // Pop the top value from the stack.
     int pop() {
-        pair<int, int> p = *stack.rbegin();
+        std::pair<int, int> p = *stack.rbegin();
         stack.erase(p);
         values.erase({p.second, p.first});
         return p.second;
     }
 
-    int top() { return stack.rbegin()->second; }
+    // Get the top value without removing it.
+    int top() {
+        return stack.rbegin()->second;
+    }
 
-    int peekMax() { return values.rbegin()->first; }
+    // Get the maximum value in the stack.
+    int peekMax() {
+        return values.rbegin()->first;
+    }
 
+    // Pop the maximum value from the stack.
     int popMax() {
-        pair<int, int> p = *values.rbegin();
+        std::pair<int, int> p = *values.rbegin();
         values.erase(p);
         stack.erase({p.second, p.first});
         return p.first;
@@ -1054,46 +1069,56 @@ https://leetcode.com/problems/basic-calculator-iii/editorial/
 class Solution {
 private:
     int calculate(const string & s, int & index) {
-        int lval = 0;
-        int rval = 0;
-        int res = 0;
-        char op = '+';
+        int lval = 0; // Initialize left operand value
+        int rval = 0; // Initialize right operand value
+        int res = 0;  // Initialize result
+        char op = '+'; // Initialize operator as addition
+
         for (; index < s.length(); index++) {
-            char c = s[index];
+            char c = s[index]; // Get the current character
+
+            // If the character is a digit, update the right operand value
             if (c >= '0' && c <= '9') {
                 int digit = c - '0';
-                rval = rval*10 + digit;
+                rval = rval * 10 + digit;
             } 
+
+            // If the character is an opening parenthesis, recursively evaluate the expression inside
             if (c == '(') {
                 index++;
                 rval = calculate(s, index);
             }
-            if (c == '+' || c == '-' || c == '*' || c == '/' || c == ')' || index == s.length()-1) {
+
+            // When encountering an operator or closing parenthesis, perform the operation
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == ')' || index == s.length() - 1) {
                 if (op == '+') {
                     res += lval;
                     lval = rval;
                 } else if (op == '-') {
                     res += lval;
                     lval = -rval;
-                } else if (op == '*'){
+                } else if (op == '*') {
                     lval = lval * rval;
                 } else {
                     lval = lval / rval;
                 }
-                rval = 0;
-                op = c;
+                rval = 0; // Reset right operand value
+                op = c; // Update operator
+
+                // If it's a closing parenthesis, break out of the loop
                 if (c == ')') {
                     break;
                 }
             }
         }
-        res += lval;
-        return res;
+        res += lval; // Add the last left operand value to the result
+        return res; // Return the final result
     }
+
 public:
     int calculate(string s) {
-        int index = 0;
-        return calculate(s,index);
+        int index = 0; // Initialize index for parsing
+        return calculate(s, index); // Call the helper function
     }
 };
 ```
