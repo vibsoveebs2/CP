@@ -379,3 +379,45 @@ public:
     }
 };
 ```
+
+
+Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
+
+If two nodes are in the same row and column, the order should be from left to right.
+
+https://leetcode.com/problems/binary-tree-vertical-order-traversal/solutions/821324/c-easy-bfs-with-map/
+
+```
+class Solution {
+public:
+    vector<vector<int>> verticalOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        
+        if(!root) return res;
+        
+        map<int, vector<int>> map;
+        
+        queue<pair<TreeNode* , int>> q;
+        
+        q.push({root, 0});
+        
+        while(!q.empty()) {
+            int size = q.size();
+            
+            for(int i = 0; i < size; i++) {
+                TreeNode* curr = q.front().first;
+                int dir = q.front().second;
+                q.pop();
+                map[dir].push_back(curr->val);
+                if(curr->left) q.push({curr->left, dir - 1});
+                if(curr->right) q.push({curr->right, dir + 1});
+            }
+        }
+        
+        for(auto i : map) {
+            res.push_back(i.second);
+        }
+        return res;
+    }
+};
+```
