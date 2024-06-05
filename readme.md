@@ -442,6 +442,9 @@ public:
         return result;
     }
 };
+//Space Complexity: O(m * n + positions.size())
+
+//Time Complexity: O(positions.size())
 ```
 
 
@@ -1015,6 +1018,8 @@ public:
         return p.first;
     }
 };
+// time O(n log n)
+// space O(n)
 ```
 
 Implement a basic calculator to evaluate a simple expression string.
@@ -1124,6 +1129,8 @@ public:
         return calculate(s, index); // Call the helper function
     }
 };
+
+//space & time o(N)
 ```
 Given an array of meeting time intervals intervals
 where intervals [i] =
@@ -1183,5 +1190,7 @@ public:
         return maxRooms;
     }
 };
+// time O(n log n)
+// space O(n)
 ```
 
