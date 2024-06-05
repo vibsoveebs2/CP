@@ -822,3 +822,201 @@ public:
     }
 };
 ```
+
+void push(int x)
+
+.
+
+int top()
+
+Design a max stack data structure that supports the stack operations and supports finding the stack's maximum element.
+
+Implement the MaxStack class:
+
+MaxStack() Initializes the stack object.
+
+Pushes element x onto the stack.
+
+int pop() Removes the element on top of the stack and returns it.
+
+Gets the element on the top of the stack without removing it.
+
+Retrieves the maximum element in the stack without removing it.
+int peekMax()
+
+int popMax() Retrieves the maximum element in the stack and removes it. If there is more than one maximum element, only remove the top-most
+one.
+
+You must come up with a solution that supports 0(1)
+
+for each top call and 0( logn) for each other call.
+
+Example 1:
+
+Input
+["MaxStack", "push", "push", "push", "top", "popMax", "top", "peekMax", "pop", "top"]
+[ [], [5], [1], [5], [], [], [], [], [], []]
+Output
+[null, null, null, null, 5, 5, 1, 5, 1, 5]
+
+Explanation
+MaxStack stk = new MaxStack();
+// [5] the top of the stack and the maximum number is 5.
+// [5, 1] the top of the stack is 1, but the maximum is 5.
+// [5, 1, 5] the top of the stack is 5, which is also the maximum, because it is the top most
+
+// return 5, [5, 1, 5] the stack did not change.
+// return 5, [5, 1] the stack is changed now, and the top is different from the max.
+// return 1, [5, 1] the stack did not change.
+stk.peekMax(); // return 5, [5, 1] the stack did not change.
+stk.pop();
+stk.top();
+
+stk.push(5);
+stk.push(1);
+stk.push(5);
+one
+stk.top();
+stk. popMax ();
+stk.top();
+
+// return 1, [5] the top of the stack and the max element is now 5.
+// return 5, [5] the stack did not change.
+
+https://leetcode.com/problems/max-stack/editorial/
+
+```
+class MaxStack {
+private:
+    set<pair<int, int>> stack;
+    set<pair<int, int>> values;
+    int cnt;
+
+public:
+    MaxStack() { cnt = 0; }
+
+    void push(int x) {
+        stack.insert({cnt, x});
+        values.insert({x, cnt});
+        cnt++;
+    }
+
+    int pop() {
+        pair<int, int> p = *stack.rbegin();
+        stack.erase(p);
+        values.erase({p.second, p.first});
+        return p.second;
+    }
+
+    int top() { return stack.rbegin()->second; }
+
+    int peekMax() { return values.rbegin()->first; }
+
+    int popMax() {
+        pair<int, int> p = *values.rbegin();
+        values.erase(p);
+        stack.erase({p.second, p.first});
+        return p.first;
+    }
+};
+```
+
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string contains only non-negative integers,
+should truncate toward zero.
+
+You may assume that the given expression is always valid. All intermediate results will be in the range of [-231, 231 - 1]
+
+Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
+
++
+
+operators, and open
+
+and closing parentheses
+
+') '. The integer division
+
+Example 1:
+
+Input: s = "1+1"
+Output: 2
+
+Example 2:
+
+Input: s = "6-4/2"
+Output: 4
+
+Example 3:
+
+Input: s="2*(5+5*2)/3+(6/2+8)"
+Output: 21
+
+Constraints:
+
+1 <= S <= 104
+
+consists of digits,
+s
+
+S
+
+.
+
+'*'
+
+'(', and ') '.
+
+is a valid expression.
+
+https://leetcode.com/problems/basic-calculator-iii/editorial/
+
+```
+class Solution {
+private:
+    int calculate(const string & s, int & index) {
+        int lval = 0;
+        int rval = 0;
+        int res = 0;
+        char op = '+';
+        for (; index < s.length(); index++) {
+            char c = s[index];
+            if (c >= '0' && c <= '9') {
+                int digit = c - '0';
+                rval = rval*10 + digit;
+            } 
+            if (c == '(') {
+                index++;
+                rval = calculate(s, index);
+            }
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == ')' || index == s.length()-1) {
+                if (op == '+') {
+                    res += lval;
+                    lval = rval;
+                } else if (op == '-') {
+                    res += lval;
+                    lval = -rval;
+                } else if (op == '*'){
+                    lval = lval * rval;
+                } else {
+                    lval = lval / rval;
+                }
+                rval = 0;
+                op = c;
+                if (c == ')') {
+                    break;
+                }
+            }
+        }
+        res += lval;
+        return res;
+    }
+public:
+    int calculate(string s) {
+        int index = 0;
+        return calculate(s,index);
+    }
+};
+```
+
