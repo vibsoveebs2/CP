@@ -455,32 +455,46 @@ https://leetcode.com/problems/binary-tree-vertical-order-traversal/solutions/821
 class Solution {
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
+        // Initialize the result vector
         vector<vector<int>> res;
         
-        if(!root) return res;
+        // Handle the case when the tree is empty
+        if (!root) return res;
         
-        map<int, vector<int>> map;
+        // Create a map to store the nodes at each vertical level
+        map<int, vector<int>> levelMap;
         
-        queue<pair<TreeNode* , int>> q;
+        // Create a queue for BFS traversal
+        queue<pair<TreeNode*, int>> q;
         
+        // Start with the root node at vertical level 0
         q.push({root, 0});
         
-        while(!q.empty()) {
+        while (!q.empty()) {
             int size = q.size();
             
-            for(int i = 0; i < size; i++) {
+            // Process nodes at the current level
+            for (int i = 0; i < size; i++) {
                 TreeNode* curr = q.front().first;
                 int dir = q.front().second;
                 q.pop();
-                map[dir].push_back(curr->val);
-                if(curr->left) q.push({curr->left, dir - 1});
-                if(curr->right) q.push({curr->right, dir + 1});
+                
+                // Add the current node's value to the corresponding vertical level
+                levelMap[dir].push_back(curr->val);
+                
+                // Enqueue left child with adjusted vertical level
+                if (curr->left) q.push({curr->left, dir - 1});
+                
+                // Enqueue right child with adjusted vertical level
+                if (curr->right) q.push({curr->right, dir + 1});
             }
         }
         
-        for(auto i : map) {
-            res.push_back(i.second);
+        // Populate the result vector from the map
+        for (auto& entry : levelMap) {
+            res.push_back(entry.second);
         }
+        
         return res;
     }
 };
