@@ -230,3 +230,64 @@ public:
     }
 };
 ```
+Given the root of a binary search tree and a target value, return the value in the BST that is closest to the target. If there are multiple answers, print the
+smallest.
+Input: root = [4,2,5,1,3], target = 3.714286
+Output: 4
+
+Example 2:
+
+Input: root = [1], target = 4.428571
+Output: 1
+
+Constraints:
+
+. The number of nodes in the tree is in the range [1, 104]
+
+0 <= Node.val <= 109
+
+-109 <= target <= 109
+
+.
+https://leetcode.com/problems/closest-binary-search-tree-value/solutions/3978526/c-easy-approach/
+
+```
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int closestValue(TreeNode* root, double target) {
+        if (!root) return -1;
+        int left = closestValue(root->left, target);
+        int right = closestValue(root->right, target);
+        int childrenClosest = closerValue(left, right, target);
+        return closerValue(childrenClosest, root->val, target);
+    }
+
+    int closerValue(int firstVal, int secondVal, double target) {
+        if (firstVal == -1) {
+            return secondVal;
+        } else if (secondVal == -1) {
+            return firstVal;
+        }
+
+        if (abs(firstVal - target) < abs(secondVal - target) || secondVal == -1) {
+            return firstVal;
+        } else if (abs(firstVal - target) > abs(secondVal - target) || firstVal == -1) {
+            return secondVal;
+        } else {
+            return firstVal < secondVal ? firstVal : secondVal;
+        }
+    }
+
+};
+```
