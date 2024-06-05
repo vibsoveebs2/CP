@@ -1218,4 +1218,66 @@ public:
 // time O(n log n)
 // space O(n)
 ```
+Certainly! Let's dive into each of your questions:
 
+1. **Smart Pointers**:
+    - **Definition**: Smart pointers are a type of C++ data structure that manage the lifetime of dynamically allocated objects. They automatically deallocate memory when it is no longer needed, preventing memory leaks.
+    - **Types of Smart Pointers**:
+        1. **`std::unique_ptr`**: Represents ownership of a dynamically allocated object. It ensures that only one `unique_ptr` can own the object at a time. When the `unique_ptr` goes out of scope, it automatically deletes the object.
+        2. **`std::shared_ptr`**: Allows multiple `shared_ptr` instances to share ownership of the same object. It keeps track of the reference count, and when the last `shared_ptr` goes out of scope, the object is deleted.
+        3. **`std::weak_ptr`**: Used in conjunction with `shared_ptr`. It provides a non-owning reference to the object. It doesn't affect the reference count, and it doesn't prevent the object from being deleted. Useful for avoiding circular references.
+    - **Implementation of Smart Pointer**:
+        - Here's a basic implementation of a simplified `std::unique_ptr`:
+        ```cpp
+        template <typename T>
+        class UniquePtr {
+        private:
+            T* ptr;
+
+        public:
+            explicit UniquePtr(T* p) : ptr(p) {}
+            ~UniquePtr() { delete ptr; }
+
+            T* operator->() const { return ptr; }
+            T& operator*() const { return *ptr; }
+        };
+        ```
+
+2. **`std::map` and `std::unordered_map`**:
+    - Both are associative containers in C++ that store key-value pairs.
+    - **`std::map`**:
+        - Implemented as a **balanced binary search tree (usually Red-Black Tree)**.
+        - Keys are always sorted in ascending order.
+        - Provides logarithmic time complexity for insertion, deletion, and search operations.
+        - Useful when you need ordered keys.
+    - **`std::unordered_map`**:
+        - Implemented as a **hash table**.
+        - Keys are not sorted.
+        - Provides constant time complexity (average case) for insertion, deletion, and search operations.
+        - Useful when you don't need ordered keys and want faster lookups.
+    - Example usage:
+        ```cpp
+        #include <iostream>
+        #include <map>
+        #include <unordered_map>
+
+        int main() {
+            // std::map example
+            std::map<std::string, int> myMap;
+            myMap["Alice"] = 25;
+            myMap["Bob"] = 30;
+
+            // std::unordered_map example
+            std::unordered_map<std::string, int> myUnorderedMap;
+            myUnorderedMap["Charlie"] = 22;
+            myUnorderedMap["David"] = 28;
+
+            std::cout << "Age of Bob: " << myMap["Bob"] << std::endl;
+            std::cout << "Age of David: " << myUnorderedMap["David"] << std::endl;
+
+            return 0;
+        }
+        ```
+
+3. **Algorithm Problem**:
+    - Please provide the specific problem statement, and I'll be happy to help you with an algorithmic solution!
