@@ -735,3 +735,90 @@ private:
     }
 };
 ```
+
+LogSystem class:
+
+.
+
+.
+
+in your storage system.
+
+.
+
+You are given several logs, where each log contains a unique ID and timestamp. Timestamp is a string that has the following format:
+Year:Month: Day:Hour:Minute: Second, for example, 2017:01:01:23:59:59. All domains are zero-padded decimal numbers.
+
+Implement the
+
+LogSystem() Initializes the LogSystem object.
+
+void put(int id, string timestamp) Stores the given log (id, timestamp)
+
+int [] retrieve(string start, string end, string granularity) Returns the IDs of the logs whose timestamps are within the range from start
+to end inclusive. start and end all have the same format as timestamp, and granularity means how precise the range should be (i.e. to the exact
+Day, Minute, etc.). For example, start="2017:01:01:23:59:59", end = "2017:01:02:23:59:59", and granularity = "Day" means that we need
+to find the logs within the inclusive range from Jan. 1st 2017 to Jan. 2nd 2017, and the Hour, Minute, and Second for each log entry can be ignored.
+
+Example 1:
+
+Input
+["LogSystem", "put", "put", "put", "retrieve", "retrieve"]
+[[], [1, "2017:01:01:23:59:59"], [2, "2017:01:01:22:59:59"], [3, "2016:01:01:00:00:00"], ["2016:01:01:01:01:01",
+"2017:01:01:23:00:00", "Year"], ["2016:01:01:01:01:01", "2017:01:01:23:00:00", "Hour"]]
+Output
+[null, null, null, null, [3, 2, 1], [2, 1]]
+
+Explanation
+LogSystem logSystem = new LogSystem();
+logSystem.put(1, "2017:01:01:23:59:59");
+logSystem.put(2, "2017:01:01:22:59:59");
+logSystem.put(3, "2016:01:01:00:00:00");
+
+// return [3,2,1], because you need to return all logs between 2016 and 2017.
+logSystem. retrieve("2016:01:01:01:01:01", "2017:01:01:23:00:00", "Year");
+
+// return [2,1], because you need to return all logs between Jan. 1, 2016 01:XX:XX and Jan. 1, 2017 23:XX:XX.
+// Log 3 is not returned because Jan. 1, 2016 00:00:00 comes before the start of the range.
+logSystem. retrieve("2016:01:01:01:01:01", "2017:01:01:23:00:00", "Hour");
+
+https://leetcode.com/problems/design-log-storage-system/solutions/3416482/solution/
+
+```
+class LogSystem {
+private:
+    unordered_map<string, int> logs;
+public:
+    LogSystem() {
+    }
+    void put(int id, string timestamp) {
+        logs[timestamp] = id;
+    }
+    vector<int> retrieve(string start, string end, string granularity) {
+        int index = getIndex(granularity);
+        string startStr = start.substr(0, index);
+        string endStr = end.substr(0, index);
+
+        vector<int> result;
+        for(auto it = logs.begin(); it!=logs.end();it++) {
+            string str = it->first.substr(0, index);
+
+            if (startStr <= str && endStr>=str) {
+                result.push_back(it->second);
+            }
+        }
+        return result;
+    }
+    int getIndex(string granularity) {
+        int index = 0;
+        if (granularity == "Year") index = 4; 
+        else if (granularity == "Month") index = 7; 
+        else if (granularity == "Day") index = 10; 
+        else if (granularity == "Hour") index = 13; 
+        else if (granularity == "Minute") index = 16;
+        else index = 19;
+
+        return index;
+    }
+};
+```
