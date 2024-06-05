@@ -311,23 +311,28 @@ https://leetcode.com/problems/closest-binary-search-tree-value/solutions/3978526
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
 class Solution {
 public:
+    // Function to find the closest value to the target in the BST
     int closestValue(TreeNode* root, double target) {
-        if (!root) return -1;
+        if (!root) return -1; // Base case: empty tree
+        // Recursively find the closest values in the left and right subtrees
         int left = closestValue(root->left, target);
         int right = closestValue(root->right, target);
+        // Determine the closest value among the children and the current node
         int childrenClosest = closerValue(left, right, target);
         return closerValue(childrenClosest, root->val, target);
     }
 
+    // Helper function to find the closer value between two values
     int closerValue(int firstVal, int secondVal, double target) {
         if (firstVal == -1) {
             return secondVal;
         } else if (secondVal == -1) {
             return firstVal;
         }
-
+        // Compare absolute differences and return the closer value
         if (abs(firstVal - target) < abs(secondVal - target) || secondVal == -1) {
             return firstVal;
         } else if (abs(firstVal - target) > abs(secondVal - target) || firstVal == -1) {
@@ -336,8 +341,8 @@ public:
             return firstVal < secondVal ? firstVal : secondVal;
         }
     }
-
 };
+
 ```
 
 You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water and 1's represent land. Initially, all the
