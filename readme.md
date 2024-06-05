@@ -550,3 +550,88 @@ public:
     }
 };
 ```
+
+'?'
+
+Given a string expression representing arbitrarily nested ternary expressions, evaluate the expression, and return the result of it.
+
+You can always assume that the given expression is valid and only contains digits,
+numbers in the expression are one-digit numbers (i.e., in the range [0, 9]).
+
+The conditional expressions group right-to-left (as usual in most languages), and the result of the expression will always evaluate to either a digit,
+'F'
+
+ידי
+
+and
+
+'F'
+
+where
+
+IT'
+
+is true and
+
+'F'
+
+is false. All the
+
+'T'
+
+or
+
+Example 1:
+
+Input: expression = "T?2:3"
+Output: "2"
+Explanation: If true, then result is 2; otherwise result is 3.
+
+Example 2:
+
+Input: expression = "F?1:T?4:5"
+Output: "4"
+Explanation: The conditional expressions group right-to-left. Using parenthesis, it is read/evaluated as:
+"(F ? 1 : (T ? 4 : 5) )" -- > "(F ? 1 : 4)" -- > "4"
+or "(F ? 1 : (T ? 4 : 5) )" -- > "(T ? 4 : 5)" -- > "4"
+
+Example 3:
+
+Input: expression = "T?T?F:5:3"
+Output: "F"
+Explanation: The conditional expressions group right-to-left. Using parenthesis, it is read/evaluated as:
+"(T ? (T ? F : 5) : 3)" -- > "(T ? F : 3)" -- > "F"
+"(T ? (T ? F : 5) : 3)" -- > "(T ? F : 5)" -- > "F"
+
+https://leetcode.com/problems/ternary-expression-parser/editorial/
+
+```
+class Solution {
+public:
+    string parseTernary(string expression) {
+        
+        // Checks if the string s is a valid atomic expression
+        auto isValidAtomic = [](string s) {
+            return (s[0] == 'T' || s[0] == 'F') && s[1] == '?' && ((s[2] >= '0' && s[2] <= '9') || s[2] == 'T' || s[2] == 'F') && s[3] == ':' && ((s[4] >= '0' && s[4] <= '9') || s[4] == 'T' || s[4] == 'F'); 
+        };
+        
+        // Returns the value of the atomic expression
+        auto solveAtomic = [](string s) {
+            return s[0] == 'T' ? s[2] : s[4];
+        };
+        
+        // Reduce expression until we are left with a single character
+        while (expression.size() != 1) {
+            int j = expression.size() - 1;
+            while (!isValidAtomic(expression.substr(j-4, 5))) {
+                j--;
+            }
+            expression = expression.substr(0, j-4) + solveAtomic(expression.substr(j-4, 5)) + expression.substr(j+1);
+        }
+        
+        // Return the final character
+        return expression;
+    }
+};
+```
+
