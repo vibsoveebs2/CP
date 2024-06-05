@@ -57,7 +57,7 @@ public:
             int curSweetness = 0;
             int peopleWithChocolate = 0;
             
-            // Start assigning chunks to the current people,.
+            // Start assigning chunks to the current people.
             for (int s : sweetness) {
                 curSweetness += s;
                 
@@ -82,6 +82,8 @@ public:
         // that is, the maximum possible sweetness we can get.
         return right;
     }
+    // Time complexity: O(n * log(sum(sweetness)))
+    // Space complexity: O(1)
 };
 ```
 
@@ -174,6 +176,8 @@ public:
         return (ns + 1 == nt);
     }
 };
+// time O(max(ns, nt))
+// space O(1)
 ```
 There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.
 
@@ -218,65 +222,75 @@ https://leetcode.com/problems/alien-dictionary/solutions/157298/c-java-bfs-and-t
 class Solution {
 public:
     string alienOrder(vector<string>& words) {
-        if (words.size() == 0) return "";
-        unordered_map<char, int> indegree;
-        unordered_map<char, unordered_set<char>> graph;
-        
-        // initialize
+        if (words.size() == 0) return ""; // If there are no words, return an empty string
+
+        // Initialize data structures
+        unordered_map<char, int> indegree; // Stores the indegree of each character
+        unordered_map<char, unordered_set<char>> graph; // Represents the directed graph
+
+        // Initialize indegree for all characters
         for (int i = 0; i < words.size(); i++) {
             for (int j = 0; j < words[i].size(); j++) {
                 char c = words[i][j];
-                indegree[c] = 0; 
+                indegree[c] = 0; // Set initial indegree to 0
             }
         }
-        
-        // build graph and record indegree
+
+        // Build the graph and record indegree
         for (int i = 0; i < words.size() - 1; i++) {
             string cur = words[i];
             string nex = words[i + 1];
+
+            // Check if cur is a prefix of nex
             if (cur.size() > nex.size() && cur.compare(0, nex.length(), nex) == 0) {
-                return "";
+                return ""; // Invalid order, return empty string
             }
+
+            // Compare characters in cur and nex
             int len = min(cur.size(), nex.size());
             for (int j = 0; j < len; j++) {
                 if (cur[j] != nex[j]) {
+                    // Add nex[j] to the set of characters reachable from cur[j]
                     unordered_set<char> set = graph[cur[j]];
                     if (set.find(nex[j]) == set.end()) {
-                        graph[cur[j]].insert(nex[j]); // build graph
-                        indegree[nex[j]]++; // add indegree
+                        graph[cur[j]].insert(nex[j]); // Build the graph
+                        indegree[nex[j]]++; // Increment indegree for nex[j]
                     }
-                    break;                        
+                    break;
                 }
             }
         }
-        
-        // topoligical sort
+
+        // Perform topological sort
         string ans;
         queue<char> q;
         for (auto& e : indegree) {
             if (e.second == 0) {
-                q.push(e.first);
+                q.push(e.first); // Add characters with indegree 0 to the queue
             }
         }
-        while(!q.empty()) {
+        while (!q.empty()) {
             char cur = q.front();
             q.pop();
-            ans += cur;
-            
+            ans += cur; // Append to the result
+
+            // Update indegree for adjacent characters
             if (graph[cur].size() != 0) {
                 for (auto& e : graph[cur]) {
                     indegree[e]--;
                     if (indegree[e] == 0) {
-                        q.push(e);
+                        q.push(e); // Add characters with updated indegree 0 to the queue
                     }
                 }
-            }            
+            }
         }
-        
-        // tell if it is cyclic
+
+        // Check if the result is cyclic (all characters included)
         return ans.length() == indegree.size() ? ans : "";
     }
 };
+// Space complexity: O(N), where N is the total number of characters in all words
+// Time complexity: O(N), considering the graph construction and topological sort
 ```
 Given the root of a binary search tree and a target value, return the value in the BST that is closest to the target. If there are multiple answers, print the
 smallest.
@@ -342,7 +356,7 @@ public:
         }
     }
 };
-
+// space & time O(log n)
 ```
 
 You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water and 1's represent land. Initially, all the
@@ -501,6 +515,7 @@ public:
         return res;
     }
 };
+//time & space o(N)
 ```
 
 You are given an
@@ -717,6 +732,7 @@ public:
         return expression;
     }
 };
+//space o(1) time o(n)
 ```
 
 return the minimal possible abbreviations for every word.
@@ -818,6 +834,7 @@ private:
         return i;
     }
 };
+// time & space O(N)
 ```
 
 LogSystem class:
