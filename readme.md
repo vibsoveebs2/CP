@@ -1122,5 +1122,63 @@ public:
     }
 };
 ```
+Given an array of meeting time intervals intervals
+where intervals [i] =
+[starti, endi], return the minimum number of conference rooms required.
 
+Example 1:
+
+Input: intervals = [[0,30], [5,10], [15,20]]
+Output: 2
+
+Example 2:
+
+Input: intervals = [[7,10], [2,4]]
+Output: 1
+
+Constraints:
+
+. 1 <= intervals. length <= 104
+
+· 0 <= starti < endi <= 106
+
+https://leetcode.com/problems/meeting-rooms-ii/solutions/4527442/c-priority-queue-heap-clean-code/
+
+```
+class Solution {
+public:
+    int minMeetingRooms(vector<vector<int>>& intervals) {
+       
+        // sort according to start time
+        sort(intervals.begin(), intervals.end());
+
+        // min heap to store number of rooms occupied at any point of time
+        priority_queue<int, vector<int>, greater<int>> pq;
+
+        // max rooms occupied
+        int maxRooms = 0;
+       
+        for(auto interval : intervals) {
+            
+            int start = interval[0];
+            int end = interval[1];
+
+            // free up ended meeting rooms
+            while(!pq.empty() && pq.top() <= start) {
+                pq.pop();
+            }
+            
+            // use a room for current meeting
+            pq.push(end);
+            
+            // update max everytime
+            maxRooms = max(maxRooms, (int) pq.size());
+
+        }
+
+        // max rooms after all meetings
+        return maxRooms;
+    }
+};
+```
 
