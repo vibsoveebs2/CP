@@ -627,6 +627,9 @@ public:
         return minDistance;
     }
 };
+// Space Complexity: O(m * n) where m is the number of rows and n is the number of columns in the grid. 
+
+// Time Complexity: O(m^2 * n^2) in the worst case, where m and n are the dimensions of the grid. The BFS traversal can visit all cells in the grid.
 ```
 
 '?'
