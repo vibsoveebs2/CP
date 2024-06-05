@@ -635,3 +635,103 @@ public:
 };
 ```
 
+return the minimal possible abbreviations for every word.
+
+"a4f". Then, a sequence of operations would
+
+["ab3f",'ab3f"]
+
+Given an array of distinct strings words
+
+The following are the rules for a string abbreviation:
+
+1. The initial abbreviation for each word is: the first character, then the number of characters in between, followed by the last character.
+
+2. If more than one word shares the same abbreviation, then perform the following operation:
+. Increase the prefix (characters in the first part) of each of their abbreviations by 1.
+. For example, say you start with the words ["abcdef", "abndef"] both initially abbreviated as
+be ["a4f","a4f"] ->
+
+· This operation is repeated until every abbreviation is unique.
+
+3. At the end, if an abbreviation did not make a word shorter, then keep it as the original word.
+
+->
+
+["abc2f","abn2f"]
+
+Example 1:
+
+Input: words = ["like", "god","internal", "me","internet", "interval","intension","face","intrusion"]
+Output: ["12e", "god", "internal", "me", "i6t", "interval","inte4n","f2e","intr4n"]
+
+Example 2:
+
+Input: words = ["aa", "aaa"]
+Output: ["aa"."aaa"1
+
+https://leetcode.com/problems/word-abbreviation/solutions/821765/c-72ms-beats-100-memory-beats-95-hash-table-no-sorting/
+
+```
+class Solution {
+public:
+    vector<string> wordsAbbreviation(vector<string>& dict) {
+        int n = dict.size();
+        vector<string> ans(n);
+        unordered_map<string, vector<int>> abbrevs;
+
+        // Go through all words in dict
+		// Update ans and also record it's abbreviation and index mapping
+        for (int i = 0; i < n; i++) {
+            string abbrev = abbreviate(dict[i]);
+            abbrevs[abbrev].emplace_back(i);
+            ans[i] = abbrev;
+        }
+		
+		// Check duplicate abbreviations
+        for (auto& words: abbrevs) {
+		    // Skip words without duplicates
+            if (words.second.size() < 2) continue;
+
+            // Handle the collisions
+            auto& indices = words.second;
+            int len = indices.size();
+			// Use a DP vector to avoid re-calculation of LCP between 2 words
+            vector<int> dp(len, 0);
+            for (int i = 0; i < len; i++) {
+                string& cur_str = dict[indices[i]];
+                for (int j = i + 1; j < len; j++) {
+                    int sim = LCP(cur_str, dict[indices[j]]);
+                    if (sim > dp[i]) dp[i] = sim;
+                    if (sim > dp[j]) dp[j] = sim;
+                }
+                if (dp[i] >= cur_str.length() - 3) {
+                    ans[indices[i]] = cur_str;
+                } else {
+                    string left = cur_str.substr(dp[i]);
+                    ans[indices[i]] = cur_str.substr(0, dp[i]) + abbreviate(left);
+                }
+            }
+        }
+        return ans;
+    }
+private:
+    // Abbreviate a word
+	// For example: "internal" => "i6l"; "cow" => "cow"
+    inline string abbreviate(string& str) {
+        if (str.length() <= 3) return str;
+        return str[0] + to_string(str.length() - 2) + str.back();
+    }
+	
+	// Check longest common prefix, and return LCP length
+	// For example: ("internal", interval") => return 5
+    inline int LCP(string& s1, string& s2) {
+        if (s1.length() != s2.length()) return 0;
+        int i = 0;
+        for (; i < s1.length(); i++) {
+            if (s1[i] != s2[i]) return i;
+        }
+        return i;
+    }
+};
+```
